@@ -4,7 +4,7 @@ import logging
 import os
 import secrets
 from flask import Flask, request, jsonify
-from cerebras.cloud.sdk import Cerebras
+# from cerebras.cloud.sdk import Cerebras
 from openai import AzureOpenAI, OpenAI
 from flask import Response
 import json
@@ -55,13 +55,13 @@ def get_config():
         API_KEY = os.environ.get("OPTILLM_API_KEY")
         default_client = create_inference_client()
     # Cerebras, OpenAI, Azure, or LiteLLM API configuration
-    elif os.environ.get("CEREBRAS_API_KEY"):
-        API_KEY = os.environ.get("CEREBRAS_API_KEY")
-        base_url = server_config['base_url']
-        if base_url != "":
-            default_client = Cerebras(api_key=API_KEY, base_url=base_url)
-        else:
-            default_client = Cerebras(api_key=API_KEY)
+    # elif os.environ.get("CEREBRAS_API_KEY"):
+    #     API_KEY = os.environ.get("CEREBRAS_API_KEY")
+    #     base_url = server_config['base_url']
+    #     if base_url != "":
+    #         default_client = Cerebras(api_key=API_KEY, base_url=base_url)
+    #     else:
+    #         default_client = Cerebras(api_key=API_KEY)
     elif os.environ.get("OPENAI_API_KEY"):
         API_KEY = os.environ.get("OPENAI_API_KEY")
         base_url = server_config['base_url']
