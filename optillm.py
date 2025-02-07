@@ -231,10 +231,12 @@ def parse_combined_approach(model: str, known_approaches: list, plugin_approache
                 approaches.append(part)
             elif '&' in part:
                 operation = 'AND'
-                approaches.extend(part.split('&'))
+                for approach in part.split('&'):
+                    approaches.append(approach.strip())
             elif '|' in part:
                 operation = 'OR'
-                approaches.extend(part.split('|'))
+                for approach in part.split('|'):
+                    approaches.append(approach.strip())
             else:
                 parsing_approaches = False
                 model_parts.append(part)
@@ -518,6 +520,7 @@ def proxy():
     n = data.get('n', server_config['n'])  # Get n value from request or config
 
     optillm_approach = data.get('optillm_approach', server_config['approach'])
+    # print(f'BVE - I think that the approach is {optillm_approach}')
     logger.debug(data)
     server_config['mcts_depth'] = data.get('mcts_depth', server_config['mcts_depth'])
     server_config['mcts_exploration'] = data.get('mcts_exploration', server_config['mcts_exploration'])
@@ -535,6 +538,7 @@ def proxy():
     default_client, api_key = get_config()
 
     operation, approaches, model = parse_combined_approach(model, known_approaches, plugin_approaches)
+    # print(f'BVE Checking for the combined approach {operation} and {approaches} with models {model}')
     logger.info(f'Using approach(es) {approaches}, operation {operation}, with model {model}')
 
     if bearer_token != "" and bearer_token.startswith("sk-"):
@@ -594,6 +598,7 @@ def proxy():
         if isinstance(messages, list) and messages:  # Only process if format changed
             response = messages[-1]['content']
 
+    print(f'I think that we have stream {stream}')
     if stream:
         return Response(generate_streaming_response(response, model), content_type='text/event-stream')
     else:
