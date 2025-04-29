@@ -6,8 +6,8 @@ planning_n: 3
 planning_m: 6
 planning_temperature_step1: 0.55
 planning_temperature_step2: 0.25
-planning_temperature_step3: 0.1
-planning_temperature_step4: 0
+planning_temperature_step3: 0.10
+planning_temperature_step4: 0.01
 planning_max_tokens_step1: 4096
 planning_max_tokens_step2: 4096
 planning_max_tokens_step3: 4096

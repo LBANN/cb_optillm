@@ -1,31 +1,31 @@
 # Apache license 2 - added after the fork for the CePO method
 import re
-import cerebras
+# import cerebras
 import openai
 import yaml
 
 from dataclasses import dataclass
-from cerebras.cloud.sdk import BadRequestError as CerebrasBadRequestError
+# from cerebras.cloud.sdk import BadRequestError as CerebrasBadRequestError
 from openai import BadRequestError as OpenAIBadRequestError
-from typing import Optional, Literal
+from typing import Optional, Literal, Any
 
 
 @dataclass
 class CepoConfig:
-    bestofn_n: int  # number of responses to be generated in best of n stage
-    bestofn_temperature: float  # temperature for verifier in best of n stage
-    bestofn_max_tokens: int  # maximum number of tokens for verifier in best of n stage
-    bestofn_rating_type: Literal["absolute", "pairwise"]  # type of rating in best of n stage
-    planning_n: int  # number of plans generated in planning stage
-    planning_m: int  # number of attempts to generate n plans in planning stage
-    planning_temperature_step1: float  # temperature for generator in step 1 of planning stage
-    planning_temperature_step2: float  # temperature for generator in step 2 of planning stage
-    planning_temperature_step3: float  # temperature for generator in step 3 of planning stage
-    planning_temperature_step4: float  # temperature for generator in step 4 of planning stage
-    planning_max_tokens_step1: int  # maximum number of tokens in step 1 of planning stage
-    planning_max_tokens_step2: int  # maximum number of tokens in step 2 of planning stage
-    planning_max_tokens_step3: int  # maximum number of tokens in step 3 of planning stage
-    planning_max_tokens_step4: int  # maximum number of tokens in step 4 of planning stage
+    bestofn_n: int = 3  # number of responses to be generated in best of n stage
+    bestofn_temperature: float = 0.1  # temperature for verifier in best of n stage
+    bestofn_max_tokens: int = 4096 # maximum number of tokens for verifier in best of n stage
+    bestofn_rating_type: Literal["absolute", "pairwise"] = "absolute" # type of rating in best of n stage
+    planning_n: int = 3 # number of plans generated in planning stage
+    planning_m: int = 6 # number of attempts to generate n plans in planning stage
+    planning_temperature_step1: float = 0.55 # temperature for generator in step 1 of planning stage
+    planning_temperature_step2: float = 0.25 # temperature for generator in step 2 of planning stage
+    planning_temperature_step3: float = 0.10 # temperature for generator in step 3 of planning stage
+    planning_temperature_step4: float = 0.01 # temperature for generator in step 4 of planning stage
+    planning_max_tokens_step1: int = 4096 # maximum number of tokens in step 1 of planning stage
+    planning_max_tokens_step2: int = 4096 # maximum number of tokens in step 2 of planning stage
+    planning_max_tokens_step3: int = 4096 # maximum number of tokens in step 3 of planning stage
+    planning_max_tokens_step4: int = 4096 # maximum number of tokens in step 4 of planning stage
 
 
 # given command line arguments which includes a yaml file path, initialize a CePO configuration
@@ -183,7 +183,7 @@ def generate_completion(system_prompt: str, task: str, client: Any, model: str, 
         )
         final_solution = response.choices[0].message.content
         completion_tokens += response.usage.completion_tokens
-    except (CerebrasBadRequestError, OpenAIBadRequestError) as e:
+    except (OpenAIBadRequestError) as e:
         # In case of an error, take the first plan as the final solution
         final_solution = plans[0]
         messages = []
